@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_inherit_ir_mail_server" model="ir.ui.view">
+        <field name="name">view.inherit.ir.mail_server</field>
+        <field name="model">ir.mail_server</field>
+        <field name="inherit_id" ref="base.ir_mail_server_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='smtp_port']" position="after">
+                <field name="log_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_smtp_configuration" model="ir.ui.view">
+        <field name="name">smtp.configuration.form</field>
+        <field name="model">smtp.configuration</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Configuration">
+                <header>
+                    <button name="confirm_smtp" string="Confirm" type="object" class="oe_highlight"
+                            groups="base.group_user" attrs="{'invisible': [('state', '=', 'confirm')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="smtp_active"/>
+                    </group>
+                    <group col="4" string="Connection Information">
+                        <field name="smtp_host"/>
+                        <field name="smtp_port" options="{'format': false}"/>
+                        <field name="smtp_log_user" readonly="1"/>
+                        <field name="smtp_debug"/>
+                    </group>
+                    <group string="Security and Authentication" colspan="4">
+                        <field name="smtp_encryption"/>
+                        <field name="smtp_user"/>
+                        <field name="smtp_pass" password="True"/>
+                        <button name="test_smtp_connection" type="object" string="Test Connection"
+                                icon="fa-television"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tree_smtp_configuration" model="ir.ui.view">
+        <field name="name">smtp.configuration.tree</field>
+        <field name="model">smtp.configuration</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="SMTP">
+                <field name="name"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_smtp" model="ir.actions.act_window">
+        <field name="name">SMTP Configuration</field>
+        <field name="res_model">smtp.configuration</field>
+        <field name="view_mode">tree,form</field>
+<!--        <field name="view_id" ref="tree_smtp_configuration"/>-->
+    </record>
+
+    <menuitem name="SMTP"
+              id="menu_smtp"
+              sequence="99"
+              groups="base.group_user"/>
+
+    <menuitem id="res_partner_menu_contacts"
+              name="SMTP Configuration"
+              action="action_smtp"
+              parent="menu_smtp"
+              sequence="2"/>
+
+</odoo>
