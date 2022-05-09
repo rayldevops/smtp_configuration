@@ -1,6 +1,7 @@
 from odoo import api, fields, models, tools, _
 from odoo.tools import ustr, pycompat, formataddr
 from email.utils import getaddresses
+import logging
 
 
 import re
@@ -9,6 +10,7 @@ import re
 
 
 address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
+_logger = logging.getLogger(__name__)
 
 
 
@@ -80,6 +82,7 @@ class InheritIrMailServer(models.Model):
         """
         # force_smtp_from = self.env['ir.config_parameter'].sudo().get_param('mail.force.smtp.from')
         force_smtp_from = self.env['ir.mail_server'].sudo().search([('active', '=', True)], limit=1).from_filter
+        _logger.info("Recording Uploaded Webhook Response Received Successfully")
         dynamic_smtp_from = self.env['ir.config_parameter'].sudo().get_param('mail.dynamic.smtp.from')
         catchall_domain = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.domain')
 
